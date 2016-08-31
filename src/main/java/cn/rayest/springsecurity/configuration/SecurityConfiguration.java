@@ -16,6 +16,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication().withUser("ray").password("ray123").roles("USER");
         auth.inMemoryAuthentication().withUser("admin").password("root123").roles("ADMIN");
         auth.inMemoryAuthentication().withUser("dba").password("root123").roles("ADMIN", "DBA");
+        auth.inMemoryAuthentication().withUser("pay").password("pay123").roles("USER");
+
     }
 
     @Override
@@ -25,7 +27,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").access("hasRole('ADMIN')")
                 .antMatchers("/db/**").access("hasRole('ADMIN') and hasRole('DBA')")
                 .and()
-                .formLogin()
+                .formLogin().loginPage("/login")
+                .usernameParameter("ssoId").passwordParameter("password")
+                .and().csrf()
                 .and()
                 .exceptionHandling().accessDeniedPage("/Access_Denied");
     }
